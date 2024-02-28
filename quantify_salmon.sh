@@ -19,7 +19,7 @@ mkdir -p ../data/3_quants
 
 REF_INDEX=../ref/salmon_index
 FILES=../data/2_trimmed/*1_trimmo.fq.gz
-MAPPED_FILES=data/3_quants
+MAPPED_FILES=../data/3_quants
 
 
 for f in $FILES
