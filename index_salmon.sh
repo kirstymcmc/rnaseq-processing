@@ -36,6 +36,7 @@ module load Salmon/1.10.1-GCC-12.2.0
 
 #cat Crichardii_676_v2.1.cds.fa.gz Crichardii_676_v2.0.fa.gz > gentrome.fa.gz
 
+cd ../ref
 #Now run salmon indexing 
 
 salmon index -t gentrome.fa.gz -d decoys.txt -p 12 -i salmon_index
