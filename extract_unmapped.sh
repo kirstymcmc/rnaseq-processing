@@ -14,13 +14,19 @@ flag="$4"  # The flag to filter by, e.g., "u"
 # Create a directory for the unmapped names files if it doesn't exist
 mkdir -p "$data_folder/unmapped_names"
 
-# Rename and move unmapped names text files
-FILES="$data_folder/3_quants/*"
-for f in $FILES; do 
-    f_name=$(basename "$f")
-    f_name=${f_name%}
-    mv "$f/aux_info/unmapped_names.txt" "$data_folder/unmapped_names/${f_name}.txt"
-done
+# Check if the unmapped_names folder is already populated
+num_files=$(find "$data_folder/unmapped_names" -type f | wc -l)
+if [ "$num_files" -eq 0 ]; then
+    echo "Moving and renaming unmapped_names.txt files..."
+    FILES="$data_folder/quants/*"
+    for f in $FILES; do 
+        f_name=$(basename "$f")
+        f_name=${f_name%_quant}
+        mv "$f/aux_info/unmapped_names.txt" "$data_folder/unmapped_names/${f_name}.txt"
+    done
+else
+    echo "The unmapped_names folder is already populated. Skipping moving and renaming step."
+fi
 
 # Ensure the output folder for the FASTQ files exists
 mkdir -p "$output_folder"

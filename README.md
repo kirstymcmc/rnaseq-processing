@@ -10,4 +10,8 @@ Steps of the workflow are as follows:
 •add QC steps 
 1. Generate salmon index with index_salmon.sh
 2. quantify reads with quantify_salmon.sh
-3. 
+
+Then either pull the result quants.sf file into r and begin analysis OR:
+
+3. Extract reads where entire pair was unmapped with extract_unmapped.sh
+4. 
