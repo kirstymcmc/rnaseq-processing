@@ -15,3 +15,7 @@ Then either pull the result quants.sf file into r and begin analysis OR:
 
 3. Extract reads where entire pair was unmapped with extract_unmapped.sh
 4. 
+
+** concatenate and translate U to T in silva files **
+cat *.fasta > SILVA.db
+awk '/^[^>]/ { gsub(/U/,"T"); print; next }1' SILVA.db > SLVA.db
