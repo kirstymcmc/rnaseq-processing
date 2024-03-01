@@ -22,7 +22,7 @@ module load MultiQC/1.9-foss-2019b-Python-3.7.4
 
 # Go to work folder
 workdir="../data/test_dir"
-cd $workdir
+#cd $workdir
 
 # Initial quality check using FastQC and MultiQC
 echo "Preprocessing pipeline started" > $workdir/pipeline_log.txt
