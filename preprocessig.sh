@@ -2,7 +2,7 @@
 
 #SBATCH --qos bbdefault
 #SBATCH --account plackarg-spl-bioinformatic-analysis
-#SBATCH --ntasks 12 # request 12 cores for the job.
+#SBATCH --ntasks 30 # request 30 cores for the job - necessary for parallel step. Considering upping mem
 #SBATCH --nodes 1 # restrict the job to a single node. Necessary if requesting more than --ntasks=1
 #SBATCH --time 1-00:00 # this requests 1 day
 #SBATCH --mail-type ALL 
