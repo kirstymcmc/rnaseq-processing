@@ -18,7 +18,7 @@ mkdir -p "$data_folder/unmapped_names"
 num_files=$(find "$data_folder/unmapped_names" -type f | wc -l)
 if [ "$num_files" -eq 0 ]; then
     echo "Moving and renaming unmapped_names.txt files..."
-    FILES="$data_folder/quants/*"
+    FILES="$data_folder/3_quants/*"
     for f in $FILES; do 
         f_name=$(basename "$f")
         f_name=${f_name%_quant}
