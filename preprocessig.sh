@@ -7,7 +7,7 @@
 #SBATCH --time 1-00:00 # this requests 1 day
 #SBATCH --mail-type ALL 
 
-module purge
+module purge;
 module load bluebear
 module load FastQC/0.11.9-Java-11
 module load MultiQC/1.9-foss-2019b-Python-3.7.4
@@ -32,7 +32,7 @@ SECONDS=0
 echo "Running FastQC on raw reads" | tee -a $workdir/pipeline_log.txt
 
 # run FastQC on all files in the dir trimmed_reads
-find $workdir/4_unmapped/ -name '*.fastq.gz' | xargs fastqc
+find $workdir/4_unmapped/ -name '*.fastq' | xargs fastqc
 
 # combine reports with MultiQC in the folder '4_unmapped'
 multiqc $workdir/4_unmapped/ -o $workdir/4_unmapped/ -n 4_unmapped_report
