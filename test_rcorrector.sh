@@ -1,3 +1,13 @@
+#!/bin/bash
+
+#SBATCH --qos bbdefault
+#SBATCH --account plackarg-spl-bioinformatic-analysis
+#SBATCH --ntasks 30 # request 12 cores for the job.
+#SBATCH --nodes 1 # restrict the job to a single node. Necessary if requesting more than --ntasks=1
+#SBATCH --time 1:00:00 # this requests 1 hour
+#SBATCH --mail-type ALL 
+
+
 module purge;
 module load bluebear
 module load bear-apps/2021b
