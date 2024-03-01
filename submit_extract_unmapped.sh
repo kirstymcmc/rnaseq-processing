@@ -12,6 +12,8 @@ module purge;
 module load bluebear
 
 
-#run from inside data file 
+#run from inside full_dataset/data folder
 
-../rnaseq-processing/extract_unmapped.sh . ./2_trimmed ./3_unmapped "u"
+
+../rnaseq-processing/extract_unmapped.sh . ./2_trimmed ./4_unmapped "u"
+
