@@ -21,7 +21,7 @@ module load MultiQC/1.9-foss-2019b-Python-3.7.4
 ##########################################################################################
 
 # Go to work folder
-workdir = "../full_dataset/data/test_dir"
+workdir = "../data/test_dir"
 cd $workdir
 
 # Initial quality check using FastQC and MultiQC
