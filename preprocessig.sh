@@ -39,7 +39,8 @@ multiqc $workdir/4_unmapped/ -o $workdir/4_unmapped/ -n 4_unmapped_report
 
 echo "Time needed to finish FastQC step on raw reads: $SECONDS seconds" >> $workdir/pipeline_log.txt
 
-module purge
+module purge;
+module load bluebear
 module load bear-apps/2021b
 module load Python/3.9.6-GCCcore-11.2.0
 module load Rcorrector/1.0.5-GCC-11.2.0
