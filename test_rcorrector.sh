@@ -25,9 +25,12 @@ mkdir -p "$workdir/5_corrected"
 echo "Corrected reads will be in 5_corrected folder" | tee -a "$workdir/pipeline_log.txt"
 
 # Raw reads are in folder '4_unmapped'
+
 fqdir="$workdir/4_unmapped"
 for r1 in "$fqdir"/*1_unmapped.fastq; do
     r2="${r1%1_unmapped.fastq}2_unmapped.fastq"
+
+
     if [[ -f $r2 ]] ; then
         run_rcorrector.pl -1 "$r1" -2 "$r2" -t 24 -od "$workdir/5_corrected"
     else

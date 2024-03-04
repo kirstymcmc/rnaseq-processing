@@ -13,9 +13,16 @@ Steps of the workflow are as follows:
 
 Then either pull the result quants.sf file into r and begin analysis OR:
 
-3. Extract reads where entire pair was unmapped with extract_unmapped.sh
-4. 
+3. Extract reads where entire pair was unmapped with extract_unmapped.sh -> quantify mapping with quantify_mapping.sh
+-----------------
+Begin de novo pipeline
+-----------------
 
+4. run preprocessing.sh to:
+    a. fastqc "raw" unmapped reads
+    b. 
 ** concatenate and translate U to T in silva files **
 cat *.fasta > SILVA.db
 awk '/^[^>]/ { gsub(/U/,"T"); print; next }1' SILVA.db > SLVA.db
+
+## absolute directory = /rds/projects/p/plackarg-spl-bioinformatic-analysis/full_dataset/data/test_dir/6_trimmed/

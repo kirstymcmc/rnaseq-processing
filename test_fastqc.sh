@@ -36,6 +36,6 @@ echo "Running FastQC on raw reads" | tee -a $workdir/pipeline_log.txt
 find $workdir/4_unmapped/ -name '*.fastq' | xargs fastqc --outdir $fastqc_output_dir
 
 # combine reports with MultiQC in the folder '4_unmapped'
-multiqc $fastqc_output_dir -o $multiqc_output_dir -n 4_unmapped_report
+multiqc $fastqc_output_dir -o $multiqc_output_dir -n raw_qc_report
 
 echo "Time needed to finish FastQC step on raw reads: $SECONDS seconds" >> $workdir/pipeline_log.txt
