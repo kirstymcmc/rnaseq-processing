@@ -107,5 +107,6 @@ multiqc $fastqc_output_dir -o $multiqc_output_dir -n trimmed_qc_report
 echo "Time needed to finish FastQC step on trimmed reads: $SECONDS seconds" >> $workdir/pipeline_log.txt
 
 ##################################################
-# Quantify with Salmon
-# NOTE: this script assumes that a salmon index has been created with "index_salmon.sh"
+# READS are now ready to quantify with Salmon
+#Salmon requires large amount of mem - submit as separate job
+# Ensure you have made a salmon index with index_salmon.sh first
