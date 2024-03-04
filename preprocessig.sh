@@ -20,9 +20,17 @@ module load MultiQC/1.9-foss-2019b-Python-3.7.4
 # processed reads will be in the 5_filtered folder                                       # 
 ##########################################################################################
 
-# Go to work folder
+# Define work folder
 workdir="../data/test_dir"
-#cd $workdir
+# Define the output directory for FastQC reports
+fastqc_output_dir="$workdir/4_qc"
+multiqc_output_dir="$workdir/4_qc"
+
+# Check if the output directory exists, if not, create it
+if [ ! -d "$fastqc_output_dir" ]; then
+  mkdir -p "$fastqc_output_dir"
+fi
+
 
 # Initial quality check using FastQC and MultiQC
 echo "Preprocessing pipeline started" > $workdir/pipeline_log.txt
@@ -32,13 +40,15 @@ SECONDS=0
 echo "Running FastQC on raw reads" | tee -a $workdir/pipeline_log.txt
 
 # run FastQC on all files in the dir trimmed_reads
-find $workdir/4_unmapped/ -name '*.fastq' | xargs fastqc
+find $workdir/4_unmapped/ -name '*.fastq' | xargs fastqc --outdir $fastqc_output_dir
 
 # combine reports with MultiQC in the folder '4_unmapped'
-multiqc $workdir/4_unmapped/ -o $workdir/4_unmapped/ -n 4_unmapped_report
+multiqc $fastqc_output_dir -o $multiqc_output_dir -n 4_unmapped_report
 
 echo "Time needed to finish FastQC step on raw reads: $SECONDS seconds" >> $workdir/pipeline_log.txt
 
+
+#purge environment and load required modules for rcorrector
 module purge;
 module load bluebear
 module load bear-apps/2021b
@@ -47,6 +57,7 @@ module load Rcorrector/1.0.5-GCC-11.2.0
 
 # Removing erroneous k-mers from Illumina paired-end reads
 # Run with the highest possible number of cores
+#Here -t 24 requests 24 cores
 SECONDS=0
 echo "Running Rcorrector on raw reads" | tee -a $workdir/pipeline_log.txt
 mkdir cor_reads
@@ -119,7 +130,7 @@ module load Bowtie2/2.5.1-GCC-12.2.0
 
 fqdir=$workdir/trimmed_reads
 for r1 in "$fqdir"/*1_unmapped.cor_val_1.fq; do
-    r2=${r1%1.cor_val_1.fq}2_unmapped.cor_val_2.fq
+    r2=${r1%1_unmapped.cor_val_1.fq}2_unmapped.cor_val_2.fq
     if [[ -f $r2 ]] ; then
         bowtie2 --quiet --very-sensitive-local \
 --phred33  -x $workdir/../SILVA/SILVA.db -1 "$r1" -2 "$r2" --threads 6 \
