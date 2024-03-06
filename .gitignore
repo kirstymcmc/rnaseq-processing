@@ -3,4 +3,4 @@ slurm*
 test*
 denovo_preprocessing.sh
 *.log
-temp*8
+temp*
