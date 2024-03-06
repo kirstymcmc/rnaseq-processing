@@ -20,18 +20,21 @@ workdir="../data/test_dir"
 # Removing erroneous k-mers from Illumina paired-end reads
 # Run with the highest possible number of cores
 SECONDS=0
-echo "Running Rcorrector on raw reads" | tee -a $workdir/pipeline_log.txt
-mkdir 5_corrected
-echo "Corrected reads will be in 5_corrected folder" | tee -a $workdir/pipeline_log.txt
+echo "Running Rcorrector on raw reads" | tee -a "$workdir/pipeline_log.txt"
+mkdir -p "$workdir/5_corrected"
+echo "Corrected reads will be in 5_corrected folder" | tee -a "$workdir/pipeline_log.txt"
 
 # Raw reads are in folder '4_unmapped'
-fqdir=$workdir/1_raw
-for r1 in "$fqdir"/*1.fq.gz; do
-    r2=${r1%1_unmapped.fastq}2_unmapped.fastq
+
+fqdir="$workdir/4_unmapped"
+for r1 in "$fqdir"/*1_unmapped.fastq; do
+    r2="${r1%1_unmapped.fastq}2_unmapped.fastq"
+
+
     if [[ -f $r2 ]] ; then
-        run_rcorrector.pl -1 $r1 -2 $r2 -t 24 -od '$workdir/5_corrected/'
+        run_rcorrector.pl -1 "$r1" -2 "$r2" -t 24 -od "$workdir/5_corrected"
     else
         echo "$r2 not found" >&2
     fi
 done
-echo "Time needed to finish Rcorrector step on raw reads: $SECONDS seconds" >> $workdir/pipeline_log.txt
+echo "Time needed to finish Rcorrector step on raw reads: $SECONDS seconds" >> "$workdir/pipeline_log.txt"

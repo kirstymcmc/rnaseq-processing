@@ -1,6 +1,6 @@
 .DS_Store
 slurm*
 test*
-
-
 denovo_preprocessing.sh
+*.log
+temp*8
