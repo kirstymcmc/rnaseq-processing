@@ -42,9 +42,9 @@ for unmapped_file in "$data_folder/unmapped_names"/*.txt; do
     # Loop through both pairs of FASTQ files
     for i in 1 2; do
         input_file="$fastq_folder/${base_name}_${i}_trimmo.fq.gz"
-        output_file="$output_folder/${base_name}_${i}_unmapped.fastq"
+        output_file="$output_folder/${base_name}_${i}_unmapped.fq.gz"
 
         # Process FASTQ file
-        zcat "$input_file" | paste - - - - | awk -v unmapped="$filtered_unmapped" 'BEGIN{while((getline < unmapped) > 0) ids["@"$1];}{if($1 in ids) print $0;}' | tr '\t' '\n' > "$output_file"
+        zcat "$input_file" | paste - - - - | awk -v unmapped="$filtered_unmapped" 'BEGIN{while((getline < unmapped) > 0) ids["@"$1];}{if($1 in ids) print $0;}' | tr '\t' '\n' | gzip > "$output_file"
     done
 done
