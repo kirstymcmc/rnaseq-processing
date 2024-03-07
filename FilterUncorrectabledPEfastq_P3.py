@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 unfix_r1_count += 1
             elif 'unfixable' in head2 and 'unfixable' not in head1:
                 unfix_r2_count += 1
-            elif 'unfixable' in both heads:
+            elif 'unfixable' in [head1, head2]:
                 unfix_both_count += 1
             else:
                 if 'cor' in head1:
