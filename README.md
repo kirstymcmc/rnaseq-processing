@@ -31,14 +31,11 @@ FastQC and MultiQC are used to assess quality of "raw" unmapped reads
 [rCorrector](https://github.com/mourisl/Rcorrector) is used to tag reads in the fastq output as corrected or uncorrectable. rcorrector is a tool specifically designed for kmer-bases read error correction of RNA-seq data.
 ### Discard read pairs for which one or both reads is deemed unfixable
 Uses a python script from the Harvard Informatics GitHub repository [TranscriptomeAssemblyTools](https://github.com/harvardinformatics/TranscriptomeAssemblyTools). The script has been updated to Python3.
-###
-
-
-
-
-
-** concatenate and translate U to T in silva files **
+### Remove unwanted rrna reads with Bowtie2
+From Silva, the SSUParc and LSUParc fasta files were downloaded (https://ftp.arb-silva.de/?pk_vid=8352a8ccf0ead1d7168388545541b6c1). Before running bowtie2-build, SSUParc and LSUParc were concatenated and U translated to T. 
+```shell
 cat *.fasta > SILVA.db
 awk '/^[^>]/ { gsub(/U/,"T"); print; next }1' SILVA.db > SLVA.db
-
-notes - absolute directory = /rds/projects/p/plackarg-spl-bioinformatic-analysis/full_dataset/data/test_dir/6_trimmed/
+```
+### Run fastqc on processed reads 
+Re-run QC from step 1.
