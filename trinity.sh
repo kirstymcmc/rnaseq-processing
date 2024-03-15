@@ -11,11 +11,11 @@ set -e
 module purge;
 module load bluebear
 
+
+
 # Move to directory containing clean reads 
 cd ../data/6_rrna_filtered
 
-
-wget https://data.broadinstitute.org/Trinity/TRINITY_SINGULARITY/trinityrnaseq.v2.15.1.simg
 
 apptainer exec -e trinityrnaseq.v2.15.1.simg  Trinity \
           --seqType fq \
