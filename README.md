@@ -23,8 +23,8 @@ Use index_salmon.sh to generate an index for Ceratopteris richardii
 Run Salmon quantification of trimmed reads with quantify_salmon.sh. After quantification, unmapped reads (where both reads in a pair did not map) are extracted and written to 4_unmapped.
 
 ## Preprocess unmapped reads 
-All preprocessing steps are in the file preprocess_unmapped.sh
-Code is roughly copied from (https://github.com/matevzl533/Noccaea_praecox_transcriptome/tree/main)
+All preprocessing steps are in the file preprocess_unmapped.sh.
+Code roughly follows pipeline from (https://github.com/matevzl533/Noccaea_praecox_transcriptome/tree/main)
 ### Initial quality control
 FastQC and MultiQC are used to assess quality of "raw" unmapped reads
 ### Removing erroneous k-mers from Illimina paired-end reads 
@@ -39,3 +39,11 @@ awk '/^[^>]/ { gsub(/U/,"T"); print; next }1' SILVA.db > SLVA.db
 ```
 ### Run fastqc on processed reads 
 Re-run QC from step 1.
+
+## de novo assemble with Trinity
+### Make sample table text file
+Trinity accepts a text file via --samples_file rather than looping through reads [see here](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Running-Trinity). Run make_sample_table.py and provide the directory containing your clean reads. 
+### Run trinity
+[Trinity](https://github.com/trinityrnaseq/trinityrnaseq) is used for de novo transcriptome assembly with default parameters. Script to run Trinity is in trinity.sh.   
+
+## Post-processing 
