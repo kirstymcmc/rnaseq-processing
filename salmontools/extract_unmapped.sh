@@ -36,13 +36,22 @@ for unmapped_file in "$data_folder/unmapped_names"/*.txt; do
     base_name=$(basename "$unmapped_file" .txt)
 
     # Filter to keep only lines with the specified flag
-    grep " $flag" "$unmapped_file" | cut -d ' ' -f 1 > "${unmapped_file%.txt}_filtered.txt"
-    filtered_unmapped="${unmapped_file%.txt}_filtered.txt"
+    grep " $flag" "$unmapped_file" | cut -d ' ' -f 1 > "${unmapped_file%.txt}_${flag}.txt"
+    filtered_unmapped="${unmapped_file%.txt}_${flag}.txt"
+    
+    echo "Filtered IDs stored in $filtered_unmapped"
 
     # Loop through both pairs of FASTQ files
     for i in 1 2; do
-        input_file="$fastq_folder/${base_name}_${i}_trimmo.fq.gz"
+        input_file="$fastq_folder/${base_name}_${i}.fq.gz"
         output_file="$output_folder/${base_name}_${i}_unmapped.fq.gz"
+        
+        #check directories are as expected
+        echo "Input file: $input_file"
+        echo "Output file: $output_file"
+        
+        # Make sure the output directory exists
+        mkdir -p "$(dirname "$output_file")"
 
         # Process FASTQ file
         zcat "$input_file" | paste - - - - | awk -v unmapped="$filtered_unmapped" 'BEGIN{while((getline < unmapped) > 0) ids["@"$1];}{if($1 in ids) print $0;}' | tr '\t' '\n' | gzip > "$output_file"
