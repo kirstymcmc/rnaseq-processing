@@ -4,7 +4,8 @@ test*
 denovo_preprocessing.sh
 *.log
 temp*
- ExN50.transcript.stats
- Trinity_*
- kallisto*
- quant_files.list
+ExN50.transcript.stats
+Trinity_*
+kallisto*
+quant_files.list
+*.bam
