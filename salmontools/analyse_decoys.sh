@@ -17,10 +17,10 @@ module load BEDTools/2.30.0-GCC-12.2.0
 
 
 # Map decoy sequences to the genome using HISAT2 and convert to bed format
-REF_INDEX=../../hisat2_stuff/reference/hisat_index/*
-FILES=../../data/4_decoys/
+REF_INDEX=../../../hisat2_stuff/reference/hisat_index/*
+FILES=../../data/4_decoys/*_1_unmapped.fq.gz
 MAPPED_FILES=../../data/4_decoys_mapped
-
+FILEPATH=../../data/4_decoys
 mkdir -p $MAPPED_FILES
 
 for f in $FILES
@@ -31,8 +31,8 @@ do
     hisat2 -p 8 \
     -x $REF_INDEX \
     --summary-file $MAPPED_FILES/${f}_summary.txt \
-    -1 $FILES/${f}_1_unmapped.fq.gz \
-    -2 $FILES/${f}_2_unmapped.fq.gz | \
+    -1 $FILEPATH/${f}_1_unmapped.fq.gz \
+    -2 $FILEPATH/${f}_2_unmapped.fq.gz | \
     samtools sort -o $MAPPED_FILES/${f}_sorted.bam
 
     # Convert sorted BAM to BED

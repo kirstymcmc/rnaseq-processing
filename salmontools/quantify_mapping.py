@@ -21,7 +21,7 @@ def parse_unmapped_names(unmapped_names_file_path):
 
 def summarize_samples(main_directory_path):
 
-    print("Sample\tTotal Reads\tMapped\tDecoys\tUnmapped\tDovetail (Discordant)\tu\td\tm1\tm2")
+    print("Sample\tTotal Reads\tMapped\tDecoys\tu\td\tm1\tm2")
 
     for root, dirs, files in os.walk(main_directory_path):
         for sample_dir in dirs:
@@ -33,10 +33,6 @@ def summarize_samples(main_directory_path):
             meta_info = {"num_processed": 0, "num_mapped": 0, "num_decoy_fragments": 0}
             unmapped_counts = {"u": 0, "d": 0, "m1": 0, "m2": 0}
 
-
-            meta_info = {"num_processed": 0, "num_mapped": 0, "num_decoy_fragments": 0}  # Default values
-            unmapped_counts = {"u": 0, "d": 0, "m1": 0, "m2": 0}  # Default values
-
             if os.path.exists(json_path):
                 meta_info = parse_meta_info(json_path)
             if os.path.exists(unmapped_names_path):
@@ -46,5 +42,5 @@ def summarize_samples(main_directory_path):
 
 
 if __name__ == "__main__":
-main_directory_path = '../../data/3_quants'  # Adjust this path accordingly
-summarize_samples(main_directory_path)
+    main_directory_path = '../../data/3_quants'  # Adjust this path accordingly
+    summarize_samples(main_directory_path)
