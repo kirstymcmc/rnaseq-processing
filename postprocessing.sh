@@ -4,7 +4,7 @@
 #SBATCH --account plackarg-spl-bioinformatic-analysis
 #SBATCH --ntasks 30 # request 30 cores - necessary for parallel step
 #SBATCH --nodes 1 # restrict the job to a single node. Necessary if requesting more than --ntasks=1
-#SBATCH --time 5-00:00 # this requests 5 days
+#SBATCH --time 1-00:00 # this requests 5 days
 #SBATCH --mail-type ALL 
 
 set -e
@@ -25,14 +25,15 @@ workdir="../data"
 #Load required modules 
 module purge;
 module load bluebear
+#module load CD-HIT/4.8.1-GCC-12.2.0
 module load bear-apps/2022b
-module load CD-HIT/4.8.1-GCC-12.2.0
 module load Perl/5.36.0-GCCcore-12.2.0
-module load Bowtie2/2.5.1-GCC-12.2.0
-module load SAMtools/1.17-GCC-12.2.0
+#module load Bowtie2/2.5.1-GCC-12.2.0
+#module load SAMtools/1.17-GCC-12.2.0
 module load R/4.3.1-foss-2022b
+module load Salmon/1.10.1-GCC-12.2.0
 
-# Removing redundancy
+## Removing redundancy
 #echo "Removing redundancy from the assembly" | tee $workdir/postprocess_log.txt
 #cd-hit-est \
 #	-i $workdir/trinity_out_dir.Trinity.fasta \
@@ -65,7 +66,7 @@ module load R/4.3.1-foss-2022b
 #awk 'sub(/^>/, "")' $workdir/Trinity_cdhit90.fasta \
 #> $workdir/Trinity_cdhit90_headers.txt
 
-# Removing the unwanted part
+## Removing the unwanted part
 #awk '{print $1}' $workdir/Trinity_cdhit90_headers.txt \
 #> $workdir/Trinity_cdhit90_header_filtered.txt
 
@@ -78,7 +79,9 @@ module load R/4.3.1-foss-2022b
 # move to directory containing clean reads 
 cd $workdir/6_rrna_filtered
 
-# Kallisto
+# Alignment-free abundance estimation with Kallisto - dedicated scripts available with Trinity
+#This will produce a folder per sample (named by sample) within which can be found abundance.tsv file
+
 #apptainer exec -e trinityrnaseq.v2.15.1.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
 #--transcripts ../Trinity_cdhit90.fasta \
 #--gene_trans_map ../Trinity_cdhit90.fasta.gene_trans_map \
@@ -86,24 +89,34 @@ cd $workdir/6_rrna_filtered
 #--est_method kallisto --aln_method bowtie2 --SS_lib_type RF \
 #--thread_count 30 --trinity_mode --prep_reference --output_dir ../kallisto_outdir
 
-# for Kallisto use this
-find . -type f -name "abundance.tsv" > ./quant_files.list
+# Alignment-free abundance estimation with Salmon - dedicated scripts available with Trinity
+#This will produce a folder per sample (named by sample) within which can be found abundance.tsv file
 
-apptainer exec -e trinityrnaseq.v2.15.1.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
---est_method kallisto \
+apptainer exec -e trinityrnaseq.v2.15.1.simg /usr/local/bin/util/align_and_estimate_abundance.pl \
+--transcripts ../Trinity_cdhit90.fasta \
 --gene_trans_map ../Trinity_cdhit90.fasta.gene_trans_map \
---quant_files ./quant_files.list --name_sample_by_basedir
+--seqType fq --samples_file ../trinity_sample_table.txt \
+--est_method salmon \
+--thread_count 30 --trinity_mode --prep_reference --output_dir ../salmon_outdir
+# Extract filepaths for abundance.tsv files (will be within 6_rrna_filtered/samplename/*) for use in next script
+find . -type f -name "quant.sf" > ./salmon_quant_files.list
 
-cd ..
-# ExN50
-apptainer exec -e ./6_rrna_filtered/trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/contig_ExN50_statistic.pl \
-./kallisto.isoform.TMM.EXPR.matrix \
-./Trinity_cdhit90.fasta transcript | tee ExN50.transcript.stats
+# Build transcript and gene expression matrices
+# matrix file for DEG analysis will be called kallisto.gene.counts.matrix
+apptainer exec -e trinityrnaseq.v2.15.1.simg /usr/local/bin/util/abundance_estimates_to_matrix.pl \
+--est_method salmon \
+--gene_trans_map ../Trinity_cdhit90.fasta.gene_trans_map \
+--quant_files ./salmon_quant_files.list --name_sample_by_basedir
 
-apptainer exec -e ./6_rrna_filtered/trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
+
+# Calculate ExN50
+apptainer exec -e trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/contig_ExN50_statistic.pl \
+./salmon.isoform.TMM.EXPR.matrix \
+../Trinity_cdhit90.fasta transcript | tee ExN50.transcript.stats
+
+apptainer exec -e trinityrnaseq.v2.15.1.simg /usr/local/bin/util/misc/plot_ExN50_statistic.Rscript \
 ./ExN50.transcript.stats
 
-xpdf ./ExN50_plot.pdf
 
 echo "Basic statistics finished. All output files generated." | tee -a $workdir/postprocess_log.txt
 echo "Starting annotations using Trinotate" | tee -a $workdir/postprocess_log.txt

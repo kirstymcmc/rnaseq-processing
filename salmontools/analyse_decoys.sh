@@ -17,7 +17,7 @@ module load BEDTools/2.30.0-GCC-12.2.0
 
 
 # Map decoy sequences to the genome using HISAT2 and convert to bed format
-REF_INDEX=../../../hisat2_stuff/reference/hisat_index/*
+REF_INDEX=../../../hisat2_stuff/reference/hisat_index/index
 FILES=../../data/4_decoys/*_1_unmapped.fq.gz
 MAPPED_FILES=../../data/4_decoys_mapped
 FILEPATH=../../data/4_decoys
