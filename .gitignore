@@ -9,3 +9,4 @@ Trinity_*
 kallisto*
 quant_files.list
 *.bam
+*.bed
