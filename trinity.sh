@@ -15,7 +15,7 @@ module load bluebear
 
 # Move to directory containing clean reads 
 cd ../data/6_rrna_filtered
-
+# Ensure trinity image is contained within 6_rrna_filtered folder
 
 apptainer exec -e trinityrnaseq.v2.15.1.simg  Trinity \
           --seqType fq \
