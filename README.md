@@ -35,7 +35,7 @@ Uses a python script from the Harvard Informatics GitHub repository [Transcripto
 From Silva, the SSUParc and LSUParc fasta files were downloaded (https://ftp.arb-silva.de/?pk_vid=8352a8ccf0ead1d7168388545541b6c1). Before running bowtie2-build, SSUParc and LSUParc were concatenated and U translated to T. 
 ```shell
 cat *.fasta > SILVA.db
-awk '/^[^>]/ { gsub(/U/,"T"); print; next }1' SILVA.db > SLVA.db
+awk '/^[^>]/ { gsub(/U/,"T"); print; next }1' SILVA.db > SILVA.db
 ```
 ### Run fastqc on processed reads 
 Re-run QC from step 1.
@@ -44,6 +44,13 @@ Re-run QC from step 1.
 ### Make sample table text file
 Trinity accepts a text file via --samples_file rather than looping through reads [see here](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Running-Trinity). Run make_sample_table.py and provide the directory containing your clean reads. 
 ### Run trinity
-[Trinity](https://github.com/trinityrnaseq/trinityrnaseq) is used for de novo transcriptome assembly with default parameters. Script to run Trinity is in trinity.sh.   
+[Trinity](https://github.com/trinityrnaseq/trinityrnaseq) is used for de novo transcriptome assembly with default parameters. Script to run Trinity is in trinity.sh. Ensure you have the latest [trinity image](https://data.broadinstitute.org/Trinity/TRINITY_SINGULARITY/) downloaded and stored in the same directory as your clean reads.   
 
 ## Post-processing 
+postprocessing.sh contains all post-processing steps to process and assess quality and completeness of de novo assembly:
+- Remove redundancy with CD-HIT
+- Produce basic statistics with trinity script TrinityStats.pl
+- Quanitfy read representation by mapping reads back to assembly with BowTie2
+- Prepare new gene trans map for non-reduntant assembly
+- Build gene expression matrices for DEG analysis with kallisto (can also modify to run with salmon)
+- Calculate ExN50 for assembly
